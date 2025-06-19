@@ -32,9 +32,13 @@
       max-width: 90vw;
       transition: box-shadow 0.28s;
     }
-    #bio h1, #bio p, #bio .contact, #bio .contact a, #bio span, #bio .hidden-love {
+    #bio h1, #bio p, #bio .contact, #bio .contact a, #bio span, #bio .hidden-love, #bio .geo-badge span, #bio .geo-badge {
       transition: text-shadow 0.25s, color 0.25s;
       cursor: pointer;
+      user-select: none; /* запрет выделения */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
     #bio h1:hover,
     #bio p:hover,
@@ -113,12 +117,12 @@
       letter-spacing: 0.14em;
       color: #05746f;
       text-shadow: 0 0 8px #13ffe922;
-      user-select: text;
       font-family: inherit;
       opacity: 0.48;
       transition: opacity 0.3s, color 0.25s, text-shadow 0.25s;
       cursor: pointer;
       word-break: break-all;
+      /* Для блока с цифрами отдельный стиль */
     }
     #bio .hidden-love:hover {
       opacity: 1;
@@ -138,6 +142,166 @@
       z-index: 1;
       pointer-events: none;
     }
+    /* Анимация для каждой цифры */
+    .digit-anim {
+      display: inline-block;
+      font-size: 1.15em;
+      padding: 0 0.04em;
+      color: #05746f;
+      text-shadow: 0 0 6px #13ffe955;
+      transition: color 0.25s, text-shadow 0.25s, filter 0.22s;
+      animation: flicker-glow 2.2s infinite;
+      will-change: filter, color, text-shadow;
+    }
+    /* Сдвиг анимации для каждой цифры */
+    .digit-anim[data-idx="0"] { animation-delay: 0s; }
+    .digit-anim[data-idx="1"] { animation-delay: 0.2s; }
+    .digit-anim[data-idx="2"] { animation-delay: 0.4s; }
+    .digit-anim[data-idx="3"] { animation-delay: 0.6s; }
+    .digit-anim[data-idx="4"] { animation-delay: 0.8s; }
+    .digit-anim[data-idx="5"] { animation-delay: 1.0s; }
+    .digit-anim[data-idx="6"] { animation-delay: 1.2s; }
+    .digit-anim[data-idx="7"] { animation-delay: 1.4s; }
+    .digit-anim[data-idx="8"] { animation-delay: 1.6s; }
+    .digit-anim[data-idx="9"] { animation-delay: 1.8s; }
+    .digit-anim[data-idx="10"] { animation-delay: 2.0s; }
+
+    @keyframes flicker-glow {
+      0%, 100% {
+        color: #05746f;
+        text-shadow: 0 0 8px #13ffe922;
+        filter: brightness(1.1);
+        opacity: 1;
+      }
+      10% {
+        color: #14ffe9;
+        text-shadow: 0 0 24px #14ffe9, 0 0 4px #0fdac8;
+        filter: brightness(2.2) blur(0.5px);
+        opacity: 1;
+      }
+      18% {
+        color: #058e88;
+        text-shadow: 0 0 16px #14ffe977, 0 0 4px #0fdac8;
+        filter: brightness(1.3);
+        opacity: 1;
+      }
+      25% {
+        color: #14ffe9;
+        text-shadow: 0 0 32px #14ffe9, 0 0 8px #0fdac8;
+        filter: brightness(2.6) blur(0.9px);
+        opacity: 0.88;
+      }
+      30% {
+        color: #14ffe9;
+        text-shadow: 0 0 24px #14ffe9, 0 0 6px #0fdac8;
+        filter: brightness(2.2) blur(0.5px);
+        opacity: 1;
+      }
+      40% {
+        color: #05746f;
+        text-shadow: 0 0 10px #13ffe922;
+        filter: brightness(1);
+        opacity: 0.7;
+      }
+      70% {
+        color: #14ffe9;
+        text-shadow: 0 0 20px #14ffe9, 0 0 4px #0fdac8;
+        filter: brightness(1.7) blur(0.3px);
+        opacity: 1;
+      }
+      80% {
+        color: #058e88;
+        text-shadow: 0 0 16px #14ffe977, 0 0 4px #0fdac8;
+        filter: brightness(1.3);
+        opacity: 0.97;
+      }
+    }
+    /* --- Geoposition badge + Анимация --- */
+    .geo-badge {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'Consolas', 'Segoe UI', Arial, sans-serif;
+      font-size: 1.08em;
+      font-weight: 500;
+      color: #14ffe9;
+      background: rgba(10, 20, 20, 0.38);
+      padding: 4px 18px 4px 12px;
+      border-radius: 14px;
+      box-shadow: 0 0 16px 0 #14ffe933, 0 2px 8px 0 #0fdac822;
+      backdrop-filter: blur(2.5px);
+      gap: 10px;
+      margin: 0 auto 1.04em auto;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.5px;
+      /* Анимация появления */
+      animation: geoFadeIn 1.2s cubic-bezier(.33,1.1,.66,1) both;
+      user-select: none; /* запрет выделения */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+    @keyframes geoFadeIn {
+      0% {
+        opacity: 0;
+        filter: blur(7px);
+        transform: translateY(-15px) scale(0.95);
+        box-shadow: 0 0 0 0 #14ffe900;
+      }
+      60% {
+        opacity: 1;
+        filter: blur(1.5px);
+        transform: translateY(4px) scale(1.03);
+        box-shadow: 0 0 28px 8px #14ffe955, 0 2px 8px 0 #0fdac822;
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: translateY(0) scale(1);
+        box-shadow: 0 0 16px 0 #14ffe933, 0 2px 8px 0 #0fdac822;
+      }
+    }
+    .geo-badge svg {
+      display: block;
+      margin-right: 2px;
+      filter: drop-shadow(0 0 6px #14ffe9cc);
+      animation: geoIconPulse 2.5s infinite cubic-bezier(.52,0,1,1);
+      user-select: none;
+      pointer-events: none;
+    }
+    @keyframes geoIconPulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 4px #14ffe9cc) brightness(1.1);
+        transform: scale(1);
+      }
+      50% {
+        filter: drop-shadow(0 0 16px #14ffe9) brightness(2.5);
+        transform: scale(1.11) rotate(-7deg);
+      }
+    }
+    .geo-badge span {
+      color: #14ffe9;
+      font-size: 1.06em;
+      text-shadow: 0 1px 12px #14ffe933, 0 1px 6px #0fdac855;
+      letter-spacing: 0.7px;
+      font-family: inherit;
+      user-select: none;
+      position: relative;
+      /* Glitch animation */
+      animation: geoGlitch 3.7s infinite linear;
+    }
+    @keyframes geoGlitch {
+      0%, 100% { text-shadow: 0 1px 12px #14ffe933, 0 1px 6px #0fdac855; }
+      15% { text-shadow: 1px 0 16px #14ffe9bb, -1px 1px 6px #0fdac8; }
+      17% { text-shadow: -1px 0 6px #14ffe9, 1px 1px 12px #0fdac8; }
+      19% { text-shadow: 1.5px -1.5px 18px #14ffe9, -1.5px 1.5px 10px #0fdac8; }
+      20% { text-shadow: 0 1px 12px #14ffe933, 0 1px 6px #0fdac855; }
+      60% { text-shadow: 0 1px 12px #14ffe933, 0 1px 6px #0fdac855; }
+      64% { text-shadow: 2px 0 16px #14ffe9bb, 0 2px 8px #0fdac8; }
+      67% { text-shadow: -1px 2px 10px #14ffe9, 0 1px 12px #0fdac8; }
+      70% { text-shadow: 0 1px 12px #14ffe933, 0 1px 6px #0fdac855; }
+    }
+    /* --- конец geo-badge --- */
   </style>
 </head>
 <body>
@@ -147,6 +311,14 @@
     <p>Anonymous tech enthusiast.<br>
       <span style="color:#14ffe9;">"We are anonymous. We are legion."</span>
     </p>
+    <!-- Геопозиция (United States) теперь ПЕРЕД Telegram, чуть ниже описания -->
+    <div class="geo-badge">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Location">
+        <circle cx="12" cy="10" r="3.2" fill="#14ffe9"/>
+        <path d="M12 2C7.03 2 3 6.04 3 11.02c0 4.5 7.15 10.11 8.13 10.89.5.4 1.25.4 1.75 0C13.85 21.13 21 15.52 21 11.02 21 6.04 16.97 2 12 2Zm0 17.9c-2.2-1.97-7-6.42-7-8.88C5 7.15 8.13 4 12 4s7 3.15 7 7.02c0 2.46-4.8 6.91-7 8.88Z" fill="#14ffe9"/>
+      </svg>
+      <span>United States of America</span>
+    </div>
     <div class="contact">
       <div class="contact-row">
         <a href="https://t.me/raidleague" target="_blank" title="Telegram channel">
@@ -169,23 +341,34 @@
         </a>
       </div>
     </div>
-    <div class="hidden-love" title="Encrypted message">
-      76 111 118 101 32 68 97 115 104 97
+    <div class="hidden-love" title="Encrypted message" id="love-encoded">
+      <!-- Цифры будут вставлены скриптом -->
     </div>
   </div>
   <script>
+    // Массив с числами (ASCII-коды)
+    const loveNumbers = [76, 111, 118, 101, 32, 68, 97, 115, 104, 97];
+    // Формируем красивую анимированную строку с цифрами
+    const loveContainer = document.getElementById('love-encoded');
+    loveContainer.innerHTML = loveNumbers.map((num, i) =>
+      `<span class="digit-anim" data-idx="${i}">${num}</span>`
+    ).join(' ');
+
     // ENGLISH letters/numbers/symbols for matrix illusion
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
     let width = window.innerWidth;
     let height = window.innerHeight;
+
+    // Увеличим размер букв и плотность
+    const fontSize = 32;
+    let columns = Math.floor(width / (fontSize * 0.73)); // плотнее
+
     canvas.width = width;
     canvas.height = height;
 
     // Characters for effect: English alphabet + numbers + symbols
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*-+=';
-    const fontSize = 20;
-    let columns = Math.floor(width / fontSize);
     let drops = [];
     for (let i = 0; i < columns; i++) {
       drops[i] = {
@@ -214,7 +397,7 @@
         ctx.fillStyle = '#14ffe9';
         ctx.shadowColor = '#14ffe9';
         ctx.shadowBlur = 10;
-        let x = i * fontSize;
+        let x = i * fontSize * 0.73; // плотнее
         let y = drops[i].y * fontSize;
         ctx.globalAlpha = 1;
         ctx.fillText(text, x, y);
@@ -247,7 +430,7 @@
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      columns = Math.floor(width / fontSize);
+      columns = Math.floor(width / (fontSize * 0.73)); // плотнее при ресайзе
       let newDrops = [];
       for (let i = 0; i < columns; i++) {
         if (drops[i]) {
